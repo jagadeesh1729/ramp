@@ -1,0 +1,38 @@
+package com.ramp.categoryservice.controller;
+
+import com.ramp.categoryservice.dto.MerchantDto;
+import com.ramp.categoryservice.exception.NotFoundException;
+import com.ramp.categoryservice.service.MerchantService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/category/merchants")
+public class MerchantController {
+
+    @Autowired
+    private MerchantService merchantService;
+
+    @GetMapping
+    public List<MerchantDto> getAllMerchants() {
+        return merchantService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MerchantDto> getMerchantById(@PathVariable int id) {
+        try {
+            MerchantDto merchantDto = merchantService.findById(id);
+            return new ResponseEntity<>(merchantDto, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+}

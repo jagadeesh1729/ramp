@@ -1,0 +1,36 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+      routes:
+        - id: CATEGORY-SERVICE
+          uri: lb://CATEGORY-SERVICE
+          predicates:
+            - Path=/category/**
+        - id: BILLMANAGEMENT-SERVICE
+          uri: lb://BILLMANAGEMENT-SERVICE
+          predicates:
+            - Path=/bill/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      hostname: localhost
